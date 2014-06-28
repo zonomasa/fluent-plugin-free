@@ -1,11 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'fluent/plugin/free/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-free"
-  spec.version       = 0.0.1
+  spec.version       = "0.0.1"
   spec.authors       = ["TATEZONO Masaki"]
   spec.email         = ["tatezono@gmail.com"]
   spec.summary       = %q{Input plugin for fluentd to collect memory usage from free command.}

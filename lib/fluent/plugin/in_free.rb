@@ -1,4 +1,4 @@
-class FreeInput < Fluent::Input
+class Fluent::FreeInput < Fluent::Input
   Fluent::Plugin.register_input('free', self)
 
   config_param :interval, :time,   :default => nil
