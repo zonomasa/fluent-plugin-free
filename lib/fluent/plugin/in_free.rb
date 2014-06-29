@@ -2,10 +2,12 @@ class Fluent::FreeInput < Fluent::Input
   Fluent::Plugin.register_input('free', self)
 
   config_param :interval, :time,   :default => nil
-  config_param :option,   :string, :default => nil
   config_param :unit,     :string, :default => 'mega'
   config_param :mode,     :string, :default => nil
   config_param :tag,      :string, :default => 'memory.free'
+
+  attr_accessor :tick   # For test
+  attr_accessor :option # For test
 
   def configure(conf)
     super
