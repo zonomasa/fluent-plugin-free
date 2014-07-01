@@ -1,6 +1,9 @@
 fluent-plugin-free
 ==================
 
+[![Build Status](http://img.shields.io/travis/zonomasa/fluent-plugin-free.svg?style=flat)][travis]
+
+
 Input plugin for fluentd to collect memory usage from 'free' command.
 
 'free' command shows system memory usage. This plugin collect values from the command , and input is into fluentd.
