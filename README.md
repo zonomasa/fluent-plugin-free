@@ -2,7 +2,6 @@ fluent-plugin-free
 ==================
 
 [![Build Status](http://img.shields.io/travis/zonomasa/fluent-plugin-free.svg?style=flat)][travis]
-[![Build Status](http://img.shields.io/travis/trema/trema/develop.svg?style=flat)][travis]
 
 
 Input plugin for fluentd to collect memory usage from 'free' command.
