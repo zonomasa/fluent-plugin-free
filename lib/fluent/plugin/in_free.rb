@@ -1,3 +1,5 @@
+require 'fluent/input'
+
 class Fluent::FreeInput < Fluent::Input
   Fluent::Plugin.register_input('free', self)
 
