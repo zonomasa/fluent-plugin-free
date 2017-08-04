@@ -1,7 +1,9 @@
-require 'fluent/input'
+require 'fluent/plugin/input'
 
-class Fluent::FreeInput < Fluent::Input
+class Fluent::Plugin::FreeInput < Fluent::Plugin::Input
   Fluent::Plugin.register_input('free', self)
+
+  helpers :timer
 
   # Define `router` method of v0.12 to support v0.10 or earlier
   unless method_defined?(:router)
@@ -36,20 +38,15 @@ class Fluent::FreeInput < Fluent::Input
 
   def start
     super
-    @thread = Thread.new(&method(:run))
+    timer_execute(:in_free_timer, @tick, &method(:run))
   end
 
   def shutdown
-    @thread.terminate
-    @thread.join
     super
   end
 
   def run
-    loop do
-      router.emit(@tag, Fluent::Engine.now, get_free_info)
-      sleep @tick
-    end
+    router.emit(@tag, Fluent::Engine.now, get_free_info)
   end
 
   private
