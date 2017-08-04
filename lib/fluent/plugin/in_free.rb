@@ -5,11 +5,6 @@ class Fluent::Plugin::FreeInput < Fluent::Plugin::Input
 
   helpers :timer
 
-  # Define `router` method of v0.12 to support v0.10 or earlier
-  unless method_defined?(:router)
-    define_method("router") { Fluent::Engine }
-  end
-
   config_param :interval, :time,   :default => nil
   config_param :unit,     :string, :default => 'mega'
   config_param :mode,     :string, :default => nil
@@ -39,10 +34,6 @@ class Fluent::Plugin::FreeInput < Fluent::Plugin::Input
   def start
     super
     timer_execute(:in_free_timer, @tick, &method(:run))
-  end
-
-  def shutdown
-    super
   end
 
   def run
