@@ -3,6 +3,11 @@ require 'fluent/input'
 class Fluent::FreeInput < Fluent::Input
   Fluent::Plugin.register_input('free', self)
 
+  # Define `router` method of v0.12 to support v0.10 or earlier
+  unless method_defined?(:router)
+    define_method("router") { Fluent::Engine }
+  end
+
   config_param :interval, :time,   :default => nil
   config_param :unit,     :string, :default => 'mega'
   config_param :mode,     :string, :default => nil
@@ -37,11 +42,12 @@ class Fluent::FreeInput < Fluent::Input
   def shutdown
     @thread.terminate
     @thread.join
+    super
   end
 
   def run
     loop do
-      Fluent::Engine.emit(@tag, Fluent::Engine.now, get_free_info)
+      router.emit(@tag, Fluent::Engine.now, get_free_info)
       sleep @tick
     end
   end
