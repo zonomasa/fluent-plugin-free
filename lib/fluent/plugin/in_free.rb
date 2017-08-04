@@ -1,5 +1,9 @@
-class Fluent::FreeInput < Fluent::Input
+require 'fluent/plugin/input'
+
+class Fluent::Plugin::FreeInput < Fluent::Plugin::Input
   Fluent::Plugin.register_input('free', self)
+
+  helpers :timer
 
   config_param :interval, :time,   :default => nil
   config_param :unit,     :string, :default => 'mega'
@@ -29,19 +33,11 @@ class Fluent::FreeInput < Fluent::Input
 
   def start
     super
-    @thread = Thread.new(&method(:run))
-  end
-
-  def shutdown
-    @thread.terminate
-    @thread.join
+    timer_execute(:in_free_timer, @tick, &method(:run))
   end
 
   def run
-    loop do
-      Fluent::Engine.emit(@tag, Fluent::Engine.now, get_free_info)
-      sleep @tick
-    end
+    router.emit(@tag, Fluent::Engine.now, get_free_info)
   end
 
   private

@@ -1,4 +1,5 @@
 require 'helper'
+require 'fluent/test/driver/input'
 
 class FreeInputTest < Test::Unit::TestCase
   def setup
@@ -36,7 +37,7 @@ class FreeInputTest < Test::Unit::TestCase
   ]
 
   def create_driver(conf = DEFAULT_CONFIG)
-    Fluent::Test::InputTestDriver.new(Fluent::FreeInput).configure(conf)
+    Fluent::Test::Driver::Input.new(Fluent::Plugin::FreeInput).configure(conf)
   end
 
   def test_configure_default
@@ -66,27 +67,25 @@ class FreeInputTest < Test::Unit::TestCase
   # mode => actual, unit => mega
   def test_emit1
     d = create_driver(CONFIG_EMIT1)
-    d.run do
-      sleep 3
-    end
+    d.run(expect_emits: 1)
     com_ret = `free #{d.instance.option}`
     used = com_ret.split($/)[2].split(/\s+/)[2]
     free = com_ret.split($/)[2].split(/\s+/)[3]
-    assert (d.emits[0][2]["used"].to_i - used.to_i).abs < 30
-    assert (d.emits[0][2]["free"].to_i - free.to_i).abs < 30
+    events = d.events.map{|e| e.last}.first
+    assert (events["used"].to_i - used.to_i).abs < 30
+    assert (events["free"].to_i - free.to_i).abs < 30
   end
 
   # mode => nil, unit => kilo
   def test_emit2
     d = create_driver(CONFIG_EMIT2)
-    d.run do
-      sleep 3
-    end
+    d.run(expect_emits: 1)
     com_ret = `free #{d.instance.option}`
     used = com_ret.split($/)[1].split(/\s+/)[2]
     free = com_ret.split($/)[1].split(/\s+/)[3]
-    assert (d.emits[0][2]["used"].to_i - used.to_i).abs < 30 * 1024
-    assert (d.emits[0][2]["free"].to_i - free.to_i).abs < 30 * 1024
+    events = d.events.map{|e| e.last}.first
+    assert (events["used"].to_i - used.to_i).abs < 30 * 1024
+    assert (events["free"].to_i - free.to_i).abs < 30 * 1024
   end
 
 end
